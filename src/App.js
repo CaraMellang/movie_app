@@ -1,62 +1,41 @@
-import React from "react";
-import PropTypes from "prop-types";
-
-const Food = (props) => {
-  console.log(props);
-  return (
-    <div>
-      <h2>
-        {props.name}은 {props.text}
-      </h2>
-      <h3>학점은 {props.grade} / 4.5</h3>
-    </div>
-  );
-};
-
-const fufufu = [
-  {
-    id: 1,
-    name: "멜랑",
-    text: "똑똑함",
-    grade: 4.5,
-  },
-  {
-    id: 2,
-    name: "중마",
-    text: "박식함",
-    grade: 0.5,
-  },
-  {
-    id: 3,
-    name: "빵국",
-    text: "로아함",
-    grade: 55.5,
-  },
-];
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Movie from "./component/Movie";
 
 function App() {
+  const [loading, setLoading] = useState(true);
+  const [movies, setMovies] = useState([]);
+
+  const response = async () => {
+    const ss = await axios.get(
+      "https://yts-proxy.now.sh/list_movies.json?sort_by=rating"
+    );
+    setMovies(ss.data.data.movies);
+    console.log(ss);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    response();
+  }, []);
   return (
     <div>
-      <h1>Food</h1>
-      {fufufu.map((hihi) => {
-        return (
-          <Food
-            key={hihi.id}
-            name={hihi.name}
-            text={hihi.text}
-            grade={hihi.grade}
-          />
-        );
-      })}
+      {loading
+        ? "로딩푸딩"
+        : movies.map((movies) => {
+            return (
+              <Movie
+                key={movies.id}
+                id={movies.id}
+                year={movies.year}
+                title={movies.title}
+                summary={movies.summary}
+                poster={movies.medium_cover_image}
+              />
+            );
+          })}
     </div>
   );
 }
-
-Food.propTypes = {
-  name: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
-  grade: PropTypes.number.isRequired,
-};
 
 export default App;
