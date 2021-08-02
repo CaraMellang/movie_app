@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Movie from "./component/Movie";
+import "./App.css";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -19,10 +20,14 @@ function App() {
     response();
   }, []);
   return (
-    <div>
-      {loading
-        ? "로딩푸딩"
-        : movies.map((movies) => {
+    <section className="container">
+      {loading ? (
+        <div>
+          <span className="loader">Loading...</span>
+        </div>
+      ) : (
+        <div className="movies">
+          {movies.map((movies) => {
             return (
               <Movie
                 key={movies.id}
@@ -31,10 +36,13 @@ function App() {
                 title={movies.title}
                 summary={movies.summary}
                 poster={movies.medium_cover_image}
+                genres={movies.genres}
               />
             );
           })}
-    </div>
+        </div>
+      )}
+    </section>
   );
 }
 
